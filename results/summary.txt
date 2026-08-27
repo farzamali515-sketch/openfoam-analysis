@@ -1,0 +1,52 @@
+ONERA M6 half-wing (ONERAV2 mesh) - steady RANS results summary
+=================================================================
+
+Solver: simpleFoam (incompressible, SIMPLEC), kOmegaSST
+Conditions: U_inf = 102 m/s @ AoA = 3.06 deg (assumed - not given by user,
+            carried over from this mesh's own documented default),
+            p = 101325 Pa, rho = 1.281 kg/m3 (used only to scale coefficients),
+            nu = 1.4207e-05 m2/s (mu = 1.82e-05 Pa.s assumed, not given)
+Reference: lRef = 0.8059 m (root chord), Aref = 0.09290304 m^2 (user-given)
+
+RESULT (2000 iterations, did not meet residualControl - see below):
+    Cl = -1.69046
+    Cd =  0.10629
+    L/D = -15.90
+    CmPitch = 0.59362
+
+*** DO NOT TREAT THESE AS PHYSICALLY VALID NUMBERS. ***
+Two independent red flags on this run:
+
+1. y+ on the wing surface: min 82.6, max 2089.5, average 456 - see
+   yPlus1 function object output. This is far outside both the resolved-
+   sublayer range (~1) and the standard wall-function range (~30-300)
+   this case's BCs assume. Root cause: snappyHexMesh added ZERO boundary-
+   layer cells on this mesh (confirmed in log.snappyHexMesh: "Writing 0
+   faces inside added layer") despite MESHING_NOTES.md describing an
+   intended ~1 mm/12-layer stack - the near-wall cells are just the raw
+   background/refinement hex cells, roughly 2 orders of magnitude too
+   large for U=102 m/s.
+
+2. Cl = -1.69 is not physically plausible for a 3.06 deg AoA wing.
+   Thin-airfoil theory gives Cl ~ 2*pi*alpha(rad) ~ 0.34 for the 2D
+   section; a finite swept wing would reduce that further, not flip its
+   sign or push it past -1. The pressure-side/suction-side force
+   resolved through a wall-function BC that assumes a valid log-law
+   region - which does not exist at y+~450-2000 - is not trustworthy.
+
+3. Convergence: U, k, omega residuals reached ~1e-5, but the controlling
+   p residual plateaued at ~1.0-1.5e-4 for the last several hundred
+   iterations (never met the 1e-5 residualControl target) - the run used
+   its full 2000-iteration budget rather than stopping early. This is
+   consistent with (not fully independent of) the near-wall breakdown
+   above feeding noise into the pressure correction.
+
+Recommendation: rebuild the mesh so snappyHexMesh actually adds boundary-
+layer cells (the meshQualityControls/layer settings that produced the
+zero-coverage result need retuning - same failure mode seen on the
+CylinderV2 case in this project), re-target y+ into the wall-function
+range (or resolve it with y+~1 and switch to a low-Re-capable BC set),
+then re-run. Until then, treat this Cd/Cl pair as a diagnostic check of
+the setup, not a design number.
+
+Full history: results/postProcessing/, fields: VTK/, ONERAV2.foam
