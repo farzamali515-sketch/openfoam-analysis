@@ -1,0 +1,46 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2606                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : _481094f-20260618 OPENFOAM=2606 version=2606
+Arch   : "LSB;label=32;scalar=64"
+Exec   : foamToVTK -latestTime
+Date   : Aug 26 2026
+Time   : 13:22:13
+Host   : 9-PC
+PID    : 566
+I/O    : uncollated
+Case   : /mnt/i/Openfoam/OPENFOAM/ONERAV2
+nProcs : 1
+trapFpe: Floating point exception trapping enabled (FOAM_SIGFPE).
+memory pool : not available
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 5, maxFileModificationPolls 20)
+
+--> FOAM Warning : allowSystemOperations : Allowing user-supplied system call operations.
+                   This can be a security risk if running untrusted cases
+                   through e.g. 'coded' on-the-fly-compilation functionality.
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Initial memory 134404 kB
+Create mesh for time = 0
+
+VTK mesh topology: 4.28 s, 475532 kB
+Time: 0
+    volScalar    : cellLevel nSurfaceLayers thickness thicknessFraction
+    Internal  : "VTK/ONERAV2_0/internal.vtu"
+    Boundary  : "VTK/ONERAV2_0/boundary/inlet.vtp"
+    Boundary  : "VTK/ONERAV2_0/boundary/outlet.vtp"
+    Boundary  : "VTK/ONERAV2_0/boundary/symmetry.vtp"
+    Boundary  : "VTK/ONERAV2_0/boundary/farfieldSide.vtp"
+    Boundary  : "VTK/ONERAV2_0/boundary/farfieldBottom.vtp"
+    Boundary  : "VTK/ONERAV2_0/boundary/farfieldTop.vtp"
+    Boundary  : "VTK/ONERAV2_0/boundary/onera.vtp"
+Wrote in 3.91 s, 873468 kB
+
+End: 8.19 s, 0 kB (peak)
+

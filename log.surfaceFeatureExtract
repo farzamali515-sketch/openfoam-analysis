@@ -1,0 +1,89 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2606                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : _481094f-20260618 OPENFOAM=2606 version=2606
+Arch   : "LSB;label=32;scalar=64"
+Exec   : surfaceFeatureExtract
+Date   : Aug 26 2026
+Time   : 13:13:00
+Host   : 9-PC
+PID    : 509
+I/O    : uncollated
+Case   : /mnt/i/Openfoam/OPENFOAM/ONERAV2
+nProcs : 1
+trapFpe: Floating point exception trapping enabled (FOAM_SIGFPE).
+memory pool : not available
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 5, maxFileModificationPolls 20)
+
+--> FOAM Warning : allowSystemOperations : Allowing user-supplied system call operations.
+                   This can be a security risk if running untrusted cases
+                   through e.g. 'coded' on-the-fly-compilation functionality.
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+
+Note: Feature line extraction only valid on closed manifold surfaces
+
+Reading surfaceFeatureExtractDict
+
+Surfaces     : onera.stl
+Output       : onera
+Load options : offset
+Write options: writeObj=yes writeVTK=off
+
+Statistics:
+Triangles    : 2310 in 1 region(s)
+Vertices     : 1157
+Bounding Box : (0.00224529 -3.14099e-12 0.0517817) (1.14882 1.21838 0.130625)
+
+Constructing feature set from included angle 150
+Selecting edges based purely on geometric tests: no
+
+Initial Feature set:
+    points : 64
+    edges  : 370
+    of which
+        region edges   : 0
+        external edges : 221
+        internal edges : 149
+
+Final Feature set:
+    points : 333
+    of which
+        convex             : 11
+        concave            : 3
+        mixed              : 50
+        non-feature        : 269
+    edges  : 370
+    of which
+        external edges     : 227
+        internal edges     : 143
+        flat edges         : 0
+        open edges         : 0
+        multiply connected : 0
+
+Writing extendedFeatureEdgeMesh to "/mnt/i/Openfoam/OPENFOAM/ONERAV2/constant/extendedFeatureEdgeMesh/onera.extendedFeatureEdgeMesh"
+
+Writing extendedEdgeMesh components to "/mnt/i/Openfoam/OPENFOAM/ONERAV2/constant/extendedFeatureEdgeMesh/onera"
+Writing 11 convex feature points to "/mnt/i/Openfoam/OPENFOAM/ONERAV2/constant/extendedFeatureEdgeMesh/onera_convexFeaturePts.obj"
+Writing 3 concave feature points to "/mnt/i/Openfoam/OPENFOAM/ONERAV2/constant/extendedFeatureEdgeMesh/onera_concaveFeaturePts.obj"
+Writing 50 mixed feature points to "/mnt/i/Openfoam/OPENFOAM/ONERAV2/constant/extendedFeatureEdgeMesh/onera_mixedFeaturePts.obj"
+Writing 50 mixed feature point structure to "/mnt/i/Openfoam/OPENFOAM/ONERAV2/constant/extendedFeatureEdgeMesh/onera_mixedFeaturePtsStructure.obj"
+Writing 227 external edges to "/mnt/i/Openfoam/OPENFOAM/ONERAV2/constant/extendedFeatureEdgeMesh/onera_externalEdges.obj"
+Writing 143 internal edges to "/mnt/i/Openfoam/OPENFOAM/ONERAV2/constant/extendedFeatureEdgeMesh/onera_internalEdges.obj"
+Writing 0 flat edges to "/mnt/i/Openfoam/OPENFOAM/ONERAV2/constant/extendedFeatureEdgeMesh/onera_flatEdges.obj"
+Writing 0 open edges to "/mnt/i/Openfoam/OPENFOAM/ONERAV2/constant/extendedFeatureEdgeMesh/onera_openEdges.obj"
+Writing 0 multiple edges to "/mnt/i/Openfoam/OPENFOAM/ONERAV2/constant/extendedFeatureEdgeMesh/onera_multipleEdges.obj"
+Writing 0 region edges to "/mnt/i/Openfoam/OPENFOAM/ONERAV2/constant/extendedFeatureEdgeMesh/onera_regionEdges.obj"
+Writing 370 edge directions to "/mnt/i/Openfoam/OPENFOAM/ONERAV2/constant/extendedFeatureEdgeMesh/onera_edgeDirections.obj"
+
+Writing featureEdgeMesh to "/mnt/i/Openfoam/OPENFOAM/ONERAV2/constant/triSurface/onera.eMesh"
+ExecutionTime = 0.02 s  ClockTime = 0 s
+
+End
+

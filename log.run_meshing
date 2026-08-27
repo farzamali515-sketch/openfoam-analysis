@@ -1,0 +1,16 @@
+--> Running blockMesh ...
+    OK - log written to log.blockMesh
+--> Running surfaceFeatureExtract ...
+    OK - log written to log.surfaceFeatureExtract
+--> Running snappyHexMesh (attempt 1/3) ...
+    OK - log written to log.snappyHexMesh
+--> Running checkMesh ...
+    OK - log written to log.checkMesh
+--> Running foamToVTK ...
+    OK - log written to log.foamToVTK
+
+Meshing pipeline complete.
+Review the mesh in ParaView via:
+  - /mnt/i/Openfoam/OPENFOAM/ONERAV2/ONERAV2.foam (native OpenFOAM reader)
+  - /mnt/i/Openfoam/OPENFOAM/ONERAV2/VTK (standalone VTK export)
+Check the actual 'Extruding X out of Y faces' lines in log.snappyHexMesh (not just the summary table) for the real boundary-layer coverage achieved - see MESHING_NOTES.md.
