@@ -1,0 +1,34 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2606                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*-----------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      transportProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+//
+// User-specified: p = 101325 Pa, rho = 1.281 kg/m3, U = 102 m/s.
+// Dynamic viscosity mu was NOT given, so standard air mu = 1.82e-05 Pa.s is
+// assumed (same value used elsewhere in this project's Cylinder case):
+//     nu = mu / rho = 1.82e-05 / 1.281 = 1.4207e-05 m2/s
+//
+// Sanity check (implied temperature via ideal gas, for reference only):
+//     T = p / (R_specific * rho) = 101325 / (287.058 * 1.281) = 275.6 K
+//
+// M = 102 / sqrt(1.4*287.058*275.6) = 102/332.8 = 0.307 -> subsonic,
+// incompressible (simpleFoam) treatment per this project's default.
+//
+// ************************************************************************* //
+
+transportModel  Newtonian;
+
+nu              1.4207e-05;
+
+// ************************************************************************* //

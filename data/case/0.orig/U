@@ -1,0 +1,78 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2606                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*-----------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+//
+// Freestream U = 102 m/s at AoA = 3.06 deg (documented default for this
+// mesh - see MESHING_NOTES.md; geometry is axis-aligned, AoA is applied
+// here as the velocity direction). Chordwise = X, spanwise = Y, up = Z:
+//     Ux = 102*cos(3.06deg) = 101.854
+//     Uz = -102*sin(3.06deg) = -5.445   (relative wind dips down onto the
+//                                         fixed, unrotated wing for +AoA)
+//
+// ************************************************************************* //
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (101.854 0 -5.445);
+
+boundaryField
+{
+    inlet
+    {
+        type            freestreamVelocity;
+        freestreamValue uniform (101.854 0 -5.445);
+        value           uniform (101.854 0 -5.445);
+    }
+
+    outlet
+    {
+        type            freestreamVelocity;
+        freestreamValue uniform (101.854 0 -5.445);
+        value           uniform (101.854 0 -5.445);
+    }
+
+    farfieldSide
+    {
+        type            freestreamVelocity;
+        freestreamValue uniform (101.854 0 -5.445);
+        value           uniform (101.854 0 -5.445);
+    }
+
+    farfieldBottom
+    {
+        type            freestreamVelocity;
+        freestreamValue uniform (101.854 0 -5.445);
+        value           uniform (101.854 0 -5.445);
+    }
+
+    farfieldTop
+    {
+        type            freestreamVelocity;
+        freestreamValue uniform (101.854 0 -5.445);
+        value           uniform (101.854 0 -5.445);
+    }
+
+    symmetry
+    {
+        type            symmetryPlane;
+    }
+
+    onera
+    {
+        type            noSlip;
+    }
+}
+
+// ************************************************************************* //

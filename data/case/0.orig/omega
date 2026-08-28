@@ -1,0 +1,76 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2606                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*-----------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      omega;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+//
+// Turbulence length scale l = 7% of chord = 0.07*0.8059 = 0.056413 m
+// omega = sqrt(k)/(Cmu^0.25 * l), Cmu = 0.09
+//       = sqrt(39.015)/(0.5477*0.056413) = 202.17 1/s
+//
+// ************************************************************************* //
+
+dimensions      [0 0 -1 0 0 0 0];
+
+internalField   uniform 202.17;
+
+boundaryField
+{
+    inlet
+    {
+        type            freestream;
+        freestreamValue uniform 202.17;
+        value           uniform 202.17;
+    }
+
+    outlet
+    {
+        type            freestream;
+        freestreamValue uniform 202.17;
+        value           uniform 202.17;
+    }
+
+    farfieldSide
+    {
+        type            freestream;
+        freestreamValue uniform 202.17;
+        value           uniform 202.17;
+    }
+
+    farfieldBottom
+    {
+        type            freestream;
+        freestreamValue uniform 202.17;
+        value           uniform 202.17;
+    }
+
+    farfieldTop
+    {
+        type            freestream;
+        freestreamValue uniform 202.17;
+        value           uniform 202.17;
+    }
+
+    symmetry
+    {
+        type            symmetryPlane;
+    }
+
+    onera
+    {
+        type            omegaWallFunction;
+        value           uniform 202.17;
+    }
+}
+
+// ************************************************************************* //

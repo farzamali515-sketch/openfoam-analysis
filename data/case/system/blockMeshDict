@@ -1,0 +1,119 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2606                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*-----------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+//
+// ONERA M6 half-wing (symmetry plane at the root, y=0). Chord c = 0.8059 m.
+// No explicit domain/sizing ratios were given, so these are documented
+// engineering defaults - see MESHING_NOTES.md:
+//   Far-field distance : 15c ahead/above/below/spanwise-past-tip,
+//                         25c behind the trailing edge (wake room).
+//   Background cell    : ~0.95-0.98 m (coarse; snappyHexMesh refinement
+//                         brings it down near the wing/wake).
+//
+// Geometry bounding box (constant/triSurface/onera.stl, metres):
+//   X (chordwise): 0.00225 -> 1.14882   Y (spanwise): 0 -> 1.21838
+//   Z (thickness): 0.05178 -> 0.130625
+//
+// AoA (3.06 deg, standard M6 case) is applied later as the inlet velocity
+// direction when solved - the geometry/mesh itself is not rotated.
+//
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+vertices
+(
+    (-12.1  0.0  -12.0)   // 0
+    ( 21.3  0.0  -12.0)   // 1
+    ( 21.3 13.3  -12.0)   // 2
+    (-12.1 13.3  -12.0)   // 3
+    (-12.1  0.0   12.2)   // 4
+    ( 21.3  0.0   12.2)   // 5
+    ( 21.3 13.3   12.2)   // 6
+    (-12.1 13.3   12.2)   // 7
+);
+
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) (34 14 25) simpleGrading (1 1 1)
+);
+
+edges
+(
+);
+
+boundary
+(
+    inlet
+    {
+        // -X face: upstream far-field
+        type    patch;
+        faces
+        (
+            (0 4 7 3)
+        );
+    }
+    outlet
+    {
+        // +X face: downstream far-field / wake exit
+        type    patch;
+        faces
+        (
+            (1 2 6 5)
+        );
+    }
+    symmetry
+    {
+        // Y=0 face: wing-root symmetry plane
+        type    symmetryPlane;
+        faces
+        (
+            (0 1 5 4)
+        );
+    }
+    farfieldSide
+    {
+        // Y=Ymax face: far-field past the wingtip
+        type    patch;
+        faces
+        (
+            (3 7 6 2)
+        );
+    }
+    farfieldBottom
+    {
+        // -Z face
+        type    patch;
+        faces
+        (
+            (0 3 2 1)
+        );
+    }
+    farfieldTop
+    {
+        // +Z face
+        type    patch;
+        faces
+        (
+            (4 5 6 7)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

@@ -1,0 +1,183 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2606                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*-----------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+//
+// ONERA M6 half-wing. chord c = 0.8059 m. No local-sizing percentages were
+// given for this case, so the refinement levels below are documented
+// engineering defaults relative to the blockMesh background cell
+// (~0.95-0.98 m) - see MESHING_NOTES.md:
+//
+//   Surface (onera.stl)  level (6 8)  -> 15.1 mm .. 3.8 mm  (curvature-based)
+//   Feature edges (LE/TE/tip/root)     level 8 -> 3.8 mm
+//   nearField box (wing + wake)        level 4 -> ~60 mm
+//
+// Boundary layers - RELAXED from the original ONERA case (see
+// ONERA/MESHING_NOTES.md section 5b), which used a user-specified
+// first-layer thickness of 1.556e-06 m, expansionRatio 1.4367 (derived),
+// 20 layers, targeting 0.005 m total - combined with tightened mesh
+// quality, that only achieved 26.7% face coverage / 18.7% of target
+// thickness. Per instruction, quality stays tightened and the layers are
+// eased instead:
+//     first layer thickness : 1.556e-06 -> 2.0e-05 m  (~13x bigger,
+//                              roughly y+~5 instead of the earlier
+//                              sub-y+1 target - much less size mismatch
+//                              against the 3.8-15 mm surface mesh)
+//     nSurfaceLayers         : 20 -> 12
+//     expansionRatio         : 1.4367 -> 1.25 (near-standard practice,
+//                              vs. the earlier steep ~44%/layer growth)
+// Resulting total stack: 2.0e-05*(1.25^12-1)/0.25 = 1.08e-03 m (~1.08 mm),
+// well below the original 5 mm target - a direct, flagged consequence of
+// relaxing the layers rather than the quality. If 1.08 mm is too thin for
+// your purposes, the alternative was relaxing quality instead - ask if
+// you want to revisit that trade-off.
+//
+// AoA (3.06 deg) is not baked into the mesh - applied later as the inlet
+// velocity direction when solved.
+//
+// Mesh quality kept tightened beyond the shipped defaults (maxNonOrtho,
+// skewness, minVolRatio - see meshQualityControls), unchanged from ONERA.
+//
+// KNOWN ISSUE: snappyHexMesh has crashed intermittently on this case (a
+// hexRef8 octree-consistency SIGABRT during castellation). See
+// ONERA/MESHING_NOTES.md section 5a for the full investigation - in
+// short, not fixable by tuning this dict; if it crashes, just re-run
+// run_meshing.py.
+//
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+castellatedMesh true;
+snap            true;
+addLayers       true;
+
+geometry
+{
+    onera.stl
+    {
+        type    triSurfaceMesh;
+        name    onera;
+    }
+
+    nearField
+    {
+        // Covers the near-wing volume and the downstream wake in one region.
+        type    searchableBox;
+        min     (-0.8  0.0  -2.33);
+        max     ( 9.2  2.85  1.29);
+    }
+};
+
+castellatedMeshControls
+{
+    maxLocalCells       4000000;
+    maxGlobalCells      20000000;
+    minRefinementCells  10;
+    maxLoadUnbalance    0.10;
+    nCellsBetweenLevels 5;
+
+    features
+    (
+        {
+            file    "onera.eMesh";
+            level   8;
+        }
+    );
+
+    refinementSurfaces
+    {
+        onera
+        {
+            level   (6 8);
+        }
+    }
+
+    resolveFeatureAngle 30;
+
+    refinementRegions
+    {
+        nearField { mode inside; levels ((1e15 4)); }
+    }
+
+    locationInMesh  (5 5 5);
+    allowFreeStandingZoneFaces true;
+}
+
+snapControls
+{
+    nSmoothPatch    3;
+    tolerance       2.0;
+    nSolveIter      50;
+    nRelaxIter      8;
+
+    nFeatureSnapIter 15;
+    implicitFeatureSnap false;
+    explicitFeatureSnap true;
+    multiRegionFeatureSnap false;
+}
+
+addLayersControls
+{
+    relativeSizes   false;
+
+    layers
+    {
+        onera
+        {
+            nSurfaceLayers  12;    // relaxed from 20, see header
+        }
+    }
+
+    firstLayerThickness    2.0e-05;   // relaxed from 1.556e-06, see header
+    expansionRatio          1.25;     // relaxed from 1.4367, see header
+    minThickness             2.0e-06;
+
+    nGrow                   0;
+
+    featureAngle            180;
+    slipFeatureAngle        30;
+    nRelaxIter              8;
+    nSmoothSurfaceNormals   1;
+    nSmoothNormals          3;
+    nSmoothThickness        10;
+    maxFaceThicknessRatio   0.5;
+    maxThicknessToMedialRatio 0.3;
+    minMedialAxisAngle      90;
+    nBufferCellsNoExtrude   0;
+    nLayerIter              50;
+}
+
+meshQualityControls
+{
+    #includeEtc "caseDicts/mesh/generation/meshQualityDict.cfg"
+
+    // Tightened beyond the shipped defaults - kept unchanged from ONERA
+    maxNonOrtho         50;
+    maxBoundarySkewness 15;
+    maxInternalSkewness 3;
+    minVolRatio         0.02;
+
+    nSmoothScale    6;
+    errorReduction  0.5;
+}
+
+writeFlags
+(
+    scalarLevels
+    layerSets
+    layerFields
+);
+
+mergeTolerance  1e-6;
+
+// ************************************************************************* //

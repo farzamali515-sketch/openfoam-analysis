@@ -1,0 +1,92 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2606                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*-----------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     simpleFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         2000;
+
+deltaT          1;
+
+writeControl    timeStep;
+
+writeInterval   100;
+
+purgeWrite      3;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+functions
+{
+    forceCoeffs1
+    {
+        type            forceCoeffs;
+        libs            (forces);
+        writeControl    timeStep;
+        writeInterval   1;
+
+        patches         (onera);
+        rho             rhoInf;
+        rhoInf          1.281;        // user-given; only scales the coefficients -
+                                       // this incompressible run itself is density-free
+
+        // AoA = 3.06 deg (documented default for this mesh, see MESHING_NOTES.md).
+        // Geometry axis-aligned: X chordwise, Y spanwise, Z up.
+        // dragDir = freestream direction, liftDir = +90 deg from it in the X-Z plane.
+        liftDir         (0.053382 0 0.998573);
+        dragDir         (0.998573 0 -0.053382);
+        pitchAxis       (0 1 0);
+        CofR            (0.203725 0 0.0912);   // approx quarter-chord, root
+
+        magUInf         102;
+        lRef            0.8059;        // root chord
+        Aref            0.09290304;    // user-given reference (planform) area
+    }
+
+    residuals1
+    {
+        type            residuals;
+        libs            (utilityFunctionObjects);
+        writeControl    timeStep;
+        writeInterval   1;
+        fields          (p U k omega);
+    }
+
+    yPlus1
+    {
+        type            yPlus;
+        libs            (fieldFunctionObjects);
+        writeControl    timeStep;
+        writeInterval   100;
+    }
+}
+
+// ************************************************************************* //
