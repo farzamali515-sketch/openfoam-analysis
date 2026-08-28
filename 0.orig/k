@@ -1,0 +1,75 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2606                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*-----------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      k;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+//
+// Freestream turbulence intensity I = 5% (project default, not specified
+// by the user): k = 1.5*(I*Uinf)^2 = 1.5*(0.05*102)^2 = 39.015 m2/s2
+//
+// ************************************************************************* //
+
+dimensions      [0 2 -2 0 0 0 0];
+
+internalField   uniform 39.015;
+
+boundaryField
+{
+    inlet
+    {
+        type            freestream;
+        freestreamValue uniform 39.015;
+        value           uniform 39.015;
+    }
+
+    outlet
+    {
+        type            freestream;
+        freestreamValue uniform 39.015;
+        value           uniform 39.015;
+    }
+
+    farfieldSide
+    {
+        type            freestream;
+        freestreamValue uniform 39.015;
+        value           uniform 39.015;
+    }
+
+    farfieldBottom
+    {
+        type            freestream;
+        freestreamValue uniform 39.015;
+        value           uniform 39.015;
+    }
+
+    farfieldTop
+    {
+        type            freestream;
+        freestreamValue uniform 39.015;
+        value           uniform 39.015;
+    }
+
+    symmetry
+    {
+        type            symmetryPlane;
+    }
+
+    onera
+    {
+        type            kqRWallFunction;
+        value           uniform 39.015;
+    }
+}
+
+// ************************************************************************* //
