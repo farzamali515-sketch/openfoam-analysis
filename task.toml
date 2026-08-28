@@ -1,0 +1,60 @@
+schema_version = "1.1"
+
+[task]
+name = "labelbox/onera-m6-boundary-layer-repair"
+description = "Repair a non-converging RANS boundary-layer mesh for the ONERA M6 half-wing and report converged, physically valid force coefficients"
+
+[delivery]
+platform = "prometheus"
+eval = false
+
+[environment]
+required_resources = "8vcpu+64gib"
+storage_mb = 50000
+allow_internet = false
+
+[agent]
+timeout_sec = 480
+user = "agent"
+
+[runner]
+attempts = 4
+turn_limit = 80
+max_ctx = 1000000
+context_mode = "none"
+required_tools = ["bash"]
+container_runtime = "firecracker"
+enable_anthropic_api = false
+
+# TODO: these are unmeasured starter defaults. log.simpleFoam from the
+# existing (broken-layer) 2000-iteration run is ~3MB and took a nontrivial
+# wall-clock time on 8vcpu - measure an actual meshing+solve cycle on the
+# target hardware and raise setup_sec/max_episode_sec only if genuinely
+# needed, per the authoring guide's "engineering-hard, not CPU-hard" rule.
+[runner.timeouts]
+setup_sec = 900
+grading_sec = 300
+tool_sec = 45
+max_episode_sec = 480
+
+[verifier]
+timeout_sec = 600
+user = "root"
+env = []
+
+[difficulty]
+level = "hard"
+task_type = "cfd"
+domain = "aerodynamics"
+reward_type = "multi_deterministic_rubrics"
+is_impossible = false
+
+[ground_truth]
+score_epsilon = 0.001
+in_container = true
+max_trivial_score = 0.05
+
+[[outputs]]
+path = "/tmp/output/force_coefficients.json"
+required = true
+description = "Converged Cl, Cd, CmPitch and mesh-quality (yPlus)/residual diagnostics for the repaired case"

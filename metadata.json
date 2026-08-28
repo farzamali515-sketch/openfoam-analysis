@@ -1,0 +1,19 @@
+{
+  "problem_data": {
+    "instance_id": "onera-m6-boundary-layer-repair",
+    "title": "ONERA M6 Wing — Boundary-Layer Mesh Repair & Force Coefficients",
+    "domain": "aerodynamics",
+    "task_type": "cfd",
+    "solver": "simpleFoam",
+    "turbulence_model": "kOmegaSST",
+    "tags": [
+      "openfoam",
+      "simpleFoam",
+      "kOmegaSST",
+      "snappyHexMesh",
+      "external-aerodynamics",
+      "mesh-quality",
+      "boundary-layer"
+    ]
+  }
+}
